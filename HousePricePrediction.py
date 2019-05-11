@@ -139,8 +139,8 @@ preprocess = make_column_transformer(
     (make_pipeline(SimpleImputer(strategy='mean'), preprocessing.StandardScaler()), nonCategoryList))   
 
 PipelineXGB = make_pipeline(preprocess,
-                        XGBRegressor(colsample_bytree= 0.7, gamma= 0.3, max_depth= 4, min_child_weight= 4, \
-                        objective= 'reg:linear', subsample= 1))
+                        XGBRegressor(colsample_bytree= 0.9, gamma= 0.3, max_depth= 4, min_child_weight= 4, \
+                        objective= 'reg:linear', subsample= 0.8))
 XGBRegressor()._get_param_names()
 model = PipelineXGB.fit(predictor[modelList], response)
 resultTrain = PipelineXGB.predict(predictor[modelList])
@@ -148,7 +148,7 @@ rmsle(response, resultTrain)
 # rmsle2(response, resultTrain)
 # rmsle3(response, resultTrain)
 PipelineLGB = make_pipeline(preprocess,
-                        LGBMModel(colsample_bytree= 0.6, max_depth= 4, min_child_weight= 3, \
+                        LGBMModel(colsample_bytree= 0.7 max_depth= 4, min_child_weight= 3, \
                         objective= 'regression', subsample= 0.6))
 LGBMModel()._get_param_names()
 model = PipelineLGB.fit(predictor[modelList], response)
@@ -222,7 +222,7 @@ print(grid_clf.best_params_)
 kerasModel = KerasRegressor(build_fn=create_model,verbose=0, epochs=500)
 param_grid = {
     'batch_size' : [10, 20, 40, 60, 80, 100],
-    'epochs' : [10, 50, 100]
+    'epochs' : [100, 300, 500, 1000]
     }
 grid_clf = GridSearchCV(kerasModel, param_grid, n_jobs=3, cv=5, iid=True, scoring=rmsle_score)
 grid_clf.fit(trainDatPreprocessT, response.values)
