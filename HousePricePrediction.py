@@ -193,14 +193,14 @@ rmsle(response, resultTrain)
 
 
 def create_model(optimizer='Adagrad', kernel_initializer='he_normal',
-                 activationXlast='relu', dropout_rate=0.0, weight_constraint=0,
-                 init_neurons=128, hidden_neurons=256, lr=0.01, decay=0.0):
+                 activationXlast='relu', dropout_rate=0.3, weight_constraint=0,
+                 init_neurons=180, hidden_neurons=400, lr=0.01, decay=0.0):
     model = Sequential()
     model.add(Dense(init_neurons, kernel_initializer=kernel_initializer,
                     input_dim=102,
                     activation=activationXlast)) # ,
                     # kernel_constraint=maxnorm(weight_constraint)))
-    # # model.add(Dropout(dropout_rate))
+    model.add(Dropout(dropout_rate))
     model.add(Dense(hidden_neurons, kernel_initializer=kernel_initializer,
                     activation=activationXlast))
     model.add(Dense(hidden_neurons, kernel_initializer=kernel_initializer,
@@ -290,14 +290,13 @@ param_grid = {
     # 'kernel_initializer': ['uniform', 'lecun_uniform', 'normal', 'zero',
     #             'glorot_normal', 'glorot_uniform', 'he_normal', 'he_uniform']
     # Step 5:
-    'activationXlast': ['softmax', 'softplus', 'softsign',
-                       'relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'linear']
+    # 'activationXlast': ['softmax', 'softplus', 'softsign',
+    #                     'relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'linear']
     # Step 6:
-    # 'weight_constraint': [1, 2, 3, 4, 5],
     # 'dropout_rate': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     # Step 7:
-    # 'init_neurons': range(20, 141, 20),
-    # 'hidden_neurons': range(100, 301, 50)
+    'init_neurons': range(140, 201, 20),
+    'hidden_neurons': range(300, 501, 50)
     }
 grid_clf = GridSearchCV(kerasModel, param_grid, n_jobs=3, cv=5, iid=True,
                         scoring=rmsle_score)
